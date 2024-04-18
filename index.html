@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music Player Design</title>
+    <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://kit.fontawesome.com/ee13c8ec0c.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="music-player">
+        <nav>
+          <div class="circle">
+            <i class="fa-solid fa-angle-left"></i>
+          </div>
+          <div class="circle">
+            <i class="fa-solid fa-bars"></i>
+          </div>
+        </nav>
+        <img src="media/468-thumbnail.png" class="song-img" />
+        <h1>Audio</h1>
+        <p>Stellar</p>
+
+        <audio id="song">
+          <source src="media/audio.mp3" type="audio/mpeg" />
+        </audio>
+        <input type="range" value="0" id="progress" />
+        <div class="controls">
+          <div>
+            <i class="fa-solid fa-backward" onclick="backwardSong()"></i>
+          </div>
+          <div onclick="playPause()">
+            <i class="fa-solid fa-play" id="ctrlIcon"></i>
+          </div>
+          <div><i class="fa-solid fa-forward" onclick="forwardSong()"></i></div>
+        </div>
+        <select id="speedSelect" onchange="changeSpeed()">
+          <option value="0.25">0.25x</option>
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="1.25">1.25x</option>
+        </select>
+      </div>
+    </div>
+    <script>
+      let progress = document.getElementById("progress");
+      let song = document.getElementById("song");
+      let ctrlIcon = document.getElementById("ctrlIcon");
+
+      song.onloadedmetadata = function () {
+        progress.max = song.duration;
+        progress.value = song.currentTime;
+      };
+
+      function playPause() {
+        if (song.paused) {
+          song.play();
+          ctrlIcon.classList.add("fa-pause");
+          ctrlIcon.classList.remove("fa-play");
+        } else {
+          song.pause();
+          ctrlIcon.classList.remove("fa-pause");
+          ctrlIcon.classList.add("fa-play");
+        }
+      }
+
+      song.addEventListener("play", function () {
+        setInterval(() => {
+          progress.value = song.currentTime;
+        }, 500);
+      });
+
+      progress.oninput = function () {
+        song.currentTime = progress.value;
+        ctrlIcon.classList.add("fa-pause");
+        ctrlIcon.classList.remove("fa-play");
+      };
+      // Define a variable to store the current position of the song
+      let currentPosition = 0;
+
+      // Function to forward the song by 10 seconds
+      function forwardSong() {
+        // Add 10 seconds to the current position
+        currentPosition += 10;
+        // Set the current position to the new value
+        song.currentTime = currentPosition;
+      }
+
+      // Function to backward the song by 10 seconds
+      function backwardSong() {
+        // Subtract 10 seconds from the current position
+        currentPosition -= 10;
+        // Set the current position to the new value
+        song.currentTime = currentPosition;
+      }
+      function changeSpeed() {
+        // Get the selected speed from the dropdown
+        let speed = document.getElementById("speedSelect").value;
+        // Set the playback rate of the song to the selected speed
+        song.playbackRate = parseFloat(speed);
+      }
+    </script>
+  </body>
+</html>
