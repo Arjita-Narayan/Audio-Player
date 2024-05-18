@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Music Player Design</title>
     <link rel="stylesheet" href="style.css" />
-    <script
-      src="https://kit.fontawesome.com/ee13c8ec0c.js"
-      crossorigin="anonymous"
-    ></script>
+    <link rel="stylesheet" href="/fontawesome-free-6.5.2-web/css/all.min.css" />
   </head>
   <body>
     <div class="container">
@@ -21,10 +18,16 @@
             <i class="fa-solid fa-bars"></i>
           </div>
         </nav>
+        <h1 id="songTitle">Audio</h1>
         <img src="media/468-thumbnail.png" class="song-img" />
         <h1>Audio</h1>
         <p>Stellar</p>
-
+        <input
+          type="file"
+          id="fileInput"
+          accept=".mp3"
+          onchange="handleFileSelect(event)"
+        />
         <audio id="song">
           <source src="media/audio.mp3" type="audio/mpeg" />
         </audio>
@@ -36,7 +39,9 @@
           <div onclick="playPause()">
             <i class="fa-solid fa-play" id="ctrlIcon"></i>
           </div>
-          <div><i class="fa-solid fa-forward" onclick="forwardSong()"></i></div>
+          <div>
+            <i class="fa-solid fa-forward" onclick="forwardSong()"></i>
+          </div>
         </div>
         <select id="speedSelect" onchange="changeSpeed()">
           <option value="0.25">0.25x</option>

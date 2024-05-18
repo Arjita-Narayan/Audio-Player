@@ -20,37 +20,60 @@ function playPause() {
 }
 
 song.addEventListener("play", function () {
-  setInterval(() => {
-    progress.value = song.currentTime;
-  }, 500);
+  updateProgress();
 });
+
+function updateProgress() {
+  progress.value = song.currentTime;
+  if (!song.paused) {
+    requestAnimationFrame(updateProgress);
+  }
+}
 
 progress.oninput = function () {
   song.currentTime = progress.value;
   ctrlIcon.classList.add("fa-pause");
   ctrlIcon.classList.remove("fa-play");
 };
-// Define a variable to store the current position of the song
-let currentPosition = 0;
 
-// Function to forward the song by 10 seconds
 function forwardSong() {
-  // Add 10 seconds to the current position
-  currentPosition += 10;
-  // Set the current position to the new value
-  song.currentTime = currentPosition;
+  song.currentTime += 10;
 }
 
-// Function to backward the song by 10 seconds
 function backwardSong() {
-  // Subtract 10 seconds from the current position
-  currentPosition -= 10;
-  // Set the current position to the new value
-  song.currentTime = currentPosition;
+  song.currentTime -= 10;
 }
+
 function changeSpeed() {
-  // Get the selected speed from the dropdown
   let speed = document.getElementById("speedSelect").value;
-  // Set the playback rate of the song to the selected speed
   song.playbackRate = parseFloat(speed);
+}
+
+function handleFileSelect(event) {
+  const selectedFile = event.target.files[0];
+  if (!selectedFile) return;
+
+  song.src = URL.createObjectURL(selectedFile);
+
+  const songTitle = document.getElementById("songTitle");
+  songTitle.textContent = selectedFile.name;
+
+  song.pause();
+  song.currentTime = 0;
+}
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then(function (registration) {
+        console.log(
+          "Service Worker registered with scope:",
+          registration.scope
+        );
+      })
+      .catch(function (error) {
+        console.log("Service Worker registration failed:", error);
+      });
+  });
 }
